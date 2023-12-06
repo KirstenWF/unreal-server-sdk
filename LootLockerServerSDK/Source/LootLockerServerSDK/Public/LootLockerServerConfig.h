@@ -8,7 +8,7 @@
 #include "LootLockerServerLogger.h"
 #include "LootLockerServerConfig.generated.h"
 
-UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "LootLocker Server SDK Settings"))
+UCLASS(Config = LootLockerServerSDK, DefaultConfig, meta = (DisplayName = "LootLocker Server SDK Settings"))
 class LOOTLOCKERSERVERSDK_API ULootLockerServerConfig : public UObject
 {
 	GENERATED_BODY()
