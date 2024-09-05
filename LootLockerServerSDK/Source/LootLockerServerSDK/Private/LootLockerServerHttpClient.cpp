@@ -78,8 +78,12 @@ void ULootLockerServerHttpClient::SendRequest_Internal(HTTPRequest InRequest) co
 	{
 		FLootLockerServerResponse response;
 		response.Success = ResponseIsValid(Response, bWasSuccessful);
-		response.ServerCallStatusCode = response.StatusCode = Response->GetResponseCode();
-		response.FullTextFromServer = Response->GetContentAsString();
+		if (Response != nullptr)
+		{
+			response.ServerCallStatusCode = response.StatusCode = Response->GetResponseCode();
+			response.FullTextFromServer = Response->GetContentAsString();
+		}
+
 		if (!response.Success)
 		{
 			FJsonObjectConverter::JsonObjectStringToUStruct<FLootLockerServerErrorData>(response.FullTextFromServer, &response.ErrorData, 0, 0);
