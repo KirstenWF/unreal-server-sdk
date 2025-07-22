@@ -77,9 +77,10 @@ void ULootLockerServerHttpClient::SendRequest_Internal(HTTPRequest InRequest) co
 	Request->OnProcessRequestComplete().BindLambda([InRequest](FHttpRequestPtr Req, FHttpResponsePtr Response, bool bWasSuccessful)
 	{
 		FLootLockerServerResponse response;
-		response.Success = ResponseIsValid(Response, bWasSuccessful);
-		if (Response != nullptr)
+		response.Success = false;
+		if (ResponseIsValid(Response, bWasSuccessful))
 		{
+			response.Success = true;
 			response.ServerCallStatusCode = response.StatusCode = Response->GetResponseCode();
 			response.FullTextFromServer = Response->GetContentAsString();
 		}
@@ -184,9 +185,13 @@ void ULootLockerServerHttpClient::UploadRawFile_Internal(const TArray<uint8>& Ra
 	Request->OnProcessRequestComplete().BindLambda([this, InRequest](FHttpRequestPtr Req, FHttpResponsePtr Response, bool bWasSuccessful)
 	{
 		FLootLockerServerResponse response;
-		response.Success = ResponseIsValid(Response, bWasSuccessful);
-		response.ServerCallStatusCode = response.StatusCode = Response->GetResponseCode();
-		response.FullTextFromServer = Response->GetContentAsString();
+		response.Success = false;
+		if (ResponseIsValid(Response, bWasSuccessful))
+		{
+			response.Success = true;
+			response.ServerCallStatusCode = response.StatusCode = Response->GetResponseCode();
+			response.FullTextFromServer = Response->GetContentAsString();
+		}
 		if (!response.Success)
 		{
 			FJsonObjectConverter::JsonObjectStringToUStruct<FLootLockerServerErrorData>(response.FullTextFromServer, &response.ErrorData, 0, 0);
